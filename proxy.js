@@ -1,4 +1,4 @@
-var HOST = '10.20.19.1';
+var HOST = '10.20.9.1';
 
 var INCOMING_MULTICAST = process.argv[2];
 var INCOMING_PORT = process.argv[3];
