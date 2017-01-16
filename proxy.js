@@ -9,13 +9,23 @@ var DESTINATION_PORT2 = process.argv[7];
 
 var dgram = require('dgram');
 
-var incoming = dgram.createSocket({type: 'udp4', reuseAddr: true});
+var incoming = [];
+incoming.push(
+    {
+        socket:            dgram.createSocket({type: 'udp4', reuseAddr: true}),
+        multicast_address: INCOMING_MULTICAST,
+        multicast_port:    INCOMING_PORT,
+        packetDropCount:   0
+    }
+);
+
 var outgoing = []
 outgoing.push(
     {
         socket:            dgram.createSocket({type: 'udp4', reuseAddr: true}),
         multicast_address: DESTINATION_MULTICAST,
-        multicast_port:    DESTINATION_PORT
+        multicast_port:    DESTINATION_PORT,
+        packetDropCount:   0
     }
 );
 
@@ -23,7 +33,8 @@ outgoing.push(
     {
         socket:            dgram.createSocket({type: 'udp4', reuseAddr: true}),
         multicast_address: DESTINATION_MULTICAST2,
-        multicast_port:    DESTINATION_PORT2
+        multicast_port:    DESTINATION_PORT2,
+        packetDropCount:   0
     }
 );
 
@@ -36,28 +47,52 @@ outgoing.forEach(function(og){
     });
 });
 
-incoming.on('listening', function () {
-    var address = incoming.address();
-    console.log('UDP Client listening on ' + address.address + ":" + address.port);
-    incoming.setBroadcast(true)
-    incoming.setMulticastTTL(128); 
-    incoming.addMembership(INCOMING_MULTICAST, HOST);
+incoming.forEach(function(ig) {
+    ig.socket.on('listening', function () {
+        var address = ig.socket.address();
+        console.log('UDP Client listening on ' + address.address + ":" + address.port);
+        ig.socket.setBroadcast(true)
+        ig.socket.setMulticastTTL(128); 
+        ig.socket.addMembership(ig.multicast_address, HOST);
+    });
 });
 
 var input_filter_pass  = () => (true);
-var output_filter_pass = () => (Math.random() > 0.005);
+var output_filter_pass = () => (Math.random() > 0.001);
 
-incoming.on('message', function (incoming_packet, remote) {
+incoming[0].socket.on('message', function (incoming_packet, remote) {
     if (input_filter_pass()) {
+
+        var packetLoss = false; // Use to prevent coincident packet loss.
+
         outgoing.forEach(function(og) {
-            if (output_filter_pass()) {
+
+            var packetDrop = false;
+            if (!output_filter_pass()) { 
+                // Drop a packet, so increment count on output.
+                og.packetDropCount += 1;
+            }
+
+            if (!packetLoss && og.packetDropCount)
+            {
+                // We haven['t dropped this packet on any other output
+                // but need to for this output then signal drop and 
+                // decrement the count.
+                packetDrop = true;
+                og.packetDropCount -= 1;
+            }
+
+            if (!packetDrop) {
                 og.socket.send(incoming_packet,
                                0,
                                incoming_packet.length,
                                og.multicast_port,og.multicast_address);
+            } else {
+                packetLoss = true;
             }
+
         });
     }
 });
 
-incoming.bind(INCOMING_PORT, INCOMING_MULTICAST);
+incoming[0].socket.bind(incoming[0].multicast_port, incoming[0].multicast_address);
