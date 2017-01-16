@@ -52,7 +52,7 @@ incoming.forEach(function(ig) {
         var address = ig.socket.address();
         console.log('UDP Client listening on ' + address.address + ":" + address.port);
         ig.socket.setBroadcast(true)
-        ig.socket.setMulticastTTL(128); 
+        ig.socket.setMulticastTTL(128);
         ig.socket.addMembership(ig.multicast_address, HOST);
     });
 });
@@ -63,20 +63,20 @@ var output_filter_pass = () => (Math.random() > 0.001);
 incoming[0].socket.on('message', function (incoming_packet, remote) {
     if (input_filter_pass()) {
 
-        var packetLoss = false; // Use to prevent coincident packet loss.
+        var PacketAlreadyDropped = false; // Use to prevent coincident packet loss.
 
         outgoing.forEach(function(og) {
 
             var packetDrop = false;
-            if (!output_filter_pass()) { 
+            if (!output_filter_pass()) {
                 // Drop a packet, so increment count on output.
                 og.packetDropCount += 1;
             }
 
-            if (!packetLoss && og.packetDropCount)
+            if (!PacketAlreadyDropped && og.packetDropCount)
             {
                 // We haven['t dropped this packet on any other output
-                // but need to for this output then signal drop and 
+                // but need to for this output then signal drop and
                 // decrement the count.
                 packetDrop = true;
                 og.packetDropCount -= 1;
@@ -88,7 +88,7 @@ incoming[0].socket.on('message', function (incoming_packet, remote) {
                                incoming_packet.length,
                                og.multicast_port,og.multicast_address);
             } else {
-                packetLoss = true;
+                PacketAlreadyDropped = true;
             }
 
         });
