@@ -9,6 +9,7 @@
   "author": "",
   "license": "Public Domain",
   "dependencies": {
-    "electron": "^1.4.14"
+    "electron": "^1.4.14",
+    "express": "^4.14.0"
   }
 }
