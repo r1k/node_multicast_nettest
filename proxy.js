@@ -43,7 +43,6 @@ outgoing.forEach(function(og){
     og.socket.on('listening', function() {
         og.socket.setBroadcast(true);
         og.socket.setMulticastTTL(128);
-        og.socket.addMembership(og.multicast_address, HOST);
     });
 });
 
@@ -58,7 +57,7 @@ incoming.forEach(function(ig) {
 });
 
 var input_filter_pass  = () => (true);
-var output_filter_pass = () => (Math.random() > 0.001);
+var output_filter_pass = () => (true);//(Math.random() > 0.001);
 
 incoming[0].socket.on('message', function (incoming_packet, remote) {
     if (input_filter_pass()) {
@@ -95,4 +94,4 @@ incoming[0].socket.on('message', function (incoming_packet, remote) {
     }
 });
 
-incoming[0].socket.bind(incoming[0].multicast_port, incoming[0].multicast_address);
+incoming[0].socket.bind(incoming[0].multicast_port);
