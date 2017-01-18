@@ -19,7 +19,8 @@ io.on('connection', function(socket) {
   socket.on('disconnect', function() {
     console.log('browser disconnected');
   });
-  socket.on('other event', function() {
+  socket.on('other event', function(dat) {
     console.log('got other event');
+    console.log(dat);
   });
 });
