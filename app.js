@@ -3,7 +3,7 @@ var app     = express();
 var http    = require('http').Server(app);
 
 var logger  = require('morgan');
-//var io      = require('socket.io')(http);
+var io      = require('socket.io')(http);
 
 app.use(logger('dev'));
 
@@ -14,9 +14,12 @@ http.listen(5000, function() {
   console.log('listening');
 });
 
-//io.on('connection', function(socket) {  
-//  console.log('a user connected');
-//  socket.on('disconnect', function() {
-//    console.log('user disconnected');
-//  });
-//});
+io.on('connection', function(socket) {  
+  console.log('browser connected');
+  socket.on('disconnect', function() {
+    console.log('browser disconnected');
+  });
+  socket.on('other event', function() {
+    console.log('got other event');
+  });
+});
