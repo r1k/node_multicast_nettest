@@ -19,6 +19,13 @@
         },
         {
             "type": "node",
+            "request": "launch",
+            "name": "Launch App",
+            "program": "${workspaceRoot}/app.js",
+            "cwd": "${workspaceRoot}"
+        },
+        {
+            "type": "node",
             "request": "attach",
             "name": "Attach to Process",
             "port": 5858
