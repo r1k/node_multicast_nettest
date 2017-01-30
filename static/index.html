@@ -46,25 +46,27 @@
               <div class="col">
                 <h5>Source Multicast</h5>
                 <div class="form-group row">
-                  <label class="col-3 col-form-label" >Address</label>
-                  <input class="col-4" id="input_mcast_addr" value="rtp://234.1.1.1:5000" type="text">
-                  <label class="col-2">Pass %</label>
-                  <input class="col-3" id="input_mcast_pass_perc" value="100" type="number" min="0" max="100" step="0.001">
+                  <label class="col-3 offset-1 col-form-label" >Address</label>
+                  <input class="col-7" id="input_mcast_addr" value="rtp://234.1.1.1:5000" type="text">
+                </div>
+                <div class="form-group row">
+                  <label class="col-4 offset-1">Pass probability (%)</label>
+                  <input class="col-2" id="input_mcast_pass_perc" value="100" type="number" min="0" max="100" step="0.001">
                 </div>
               </div>
               <div class="col">
                 <h5>Destination Multicasts</h5>
-                  <div class="form-group row">
-                    <label class="col-3">Address 1</label>
-                    <input class="col-4" id="output_mcast_addr_1" value="rtp://234.1.1.2:5000" type="text">
-                    <label class="col-2">Pass %</label>
-                    <input class="col-3" id="output_mcast_pass_perc_1" value="100" type="number" min="0" max="100" step="0.05">
-                  </div>
                 <div class="form-group row">
-                  <label class="col-3">Address 2</label>
-                  <input class="col-4" id="output_mcast_addr_2" value="rtp://234.1.1.3:5000" type="text">
-                  <label class="col-2">Pass %</label>
-                  <input class="col-3" id="output_mcast_pass_perc_2" value="100" type="number" min="0" max="100" step="0.05">
+                  <label class="col-3 offset-1">Address 1</label>
+                  <input class="col-7" id="output_mcast_addr_1" value="rtp://234.1.1.2:5000" type="text">
+                </div>
+                <div class="form-group row">
+                  <label class="col-3 offset-1">Address 2</label>
+                  <input class="col-7" id="output_mcast_addr_2" value="rtp://234.1.1.3:5000" type="text">
+                </div>
+                <div class="form-group row">
+                  <label class="col-4 offset-1">Pass probability (%)</label>
+                  <input class="col-2" id="output_mcast_pass_perc_1" value="100" type="number" min="0" max="100" step="0.05">
                 </div>
               </div>
             </div>
